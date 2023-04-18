@@ -136,6 +136,7 @@ class HBNBCommand(cmd.Cmd):
                     value = shlex.split(value)[0].replace('_', ' ')
                 attr_dict[key] = value
         new_instance = HBNBCommand.classes[arg_list[0]](**attr_dict)
+        storage.save()
         print(new_instance.id)
         storage.save()
 
