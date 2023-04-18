@@ -113,41 +113,31 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def _key_value_parser(self, args):
-        """creates a dictionary from a list of strings"""
-        new_dict = {}
-        for arg in args:
-            if "=" in arg:
-                kvp = arg.split('=', 1)
-                key = kvp[0]
-                value = kvp[1]
-                if value[0] == value[-1] == '"':
-                    value = shlex.split(value)[0].replace('_', ' ')
-                else:
-                    try:
-                        value = int(value)
-                    except:
-                        try:
-                            value = float(value)
-                        except:
-                            continue
-                new_dict[key] = value
-        return new_dict
-
     def do_create(self, args):
         """ Create an object of any class"""
-        args = arg.split()
-        if len(args) == 0:
+        arg_list = args.split(' ')
+        if not arg_list[0]:
             print("** class name missing **")
-            return False
-        if args[0] in classes:
-            new_dict = self._key_value_parser(args[1:])
-            instance = classes[args[0]](**new_dict)
-        else:
+            return
+        elif arg_list[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
-            return False
-        print(instance.id)
-        instance.save()
+            return
+        params = arg_list[1:]
+        if len(params) == 0:
+            new_instance = HBNBCommand.classes[arg_list[0]]()
+        else:
+            attr_dict = {}
+            for param in params:
+                kv_list = param.split('=')
+                if type(kv_list[0]) in [str, int, float]:
+                    key = kv_list[0]
+                    value = kv_list[1]
+                if type(value) == str:
+                    value = shlex.split(value)[0].replace('_', ' ')
+                attr_dict[key] = value
+        new_instance = HBNBCommand.classes[arg_list[0]](**attr_dict)
+        print(new_instance.id)
+        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
