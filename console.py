@@ -124,10 +124,7 @@ class HBNBCommand(cmd.Cmd):
         elif c_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        try:
-            new_instance = HBNBCommand.classes[c_name]()
-        except Exception as err:
-            print(err)
+        new_instance = HBNBCommand.classes[c_name]()
         while (idx < len(params)):
             key = params[idx].partition('=')[0]
             value = params[idx].partition('=')[2]
