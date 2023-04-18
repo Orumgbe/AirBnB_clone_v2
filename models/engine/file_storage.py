@@ -61,4 +61,4 @@ class FileStorage:
             return
         for key, value in self.all(obj.__class__).items():
             if value is obj:
-                del self.all()[key]
+                del self.all(obj.__class__)[key]
