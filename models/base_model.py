@@ -9,21 +9,16 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, DateTime
 
 
-class empty_class:
-    """Does nothing"""
-    pass
-
-
 storage_type = getenv('HBNB_STORAGE_USER')
 if storage_type == "db":
     Base = declarative_base()
 else:
-    Base = empty_class()
+    Base = object
 
 
 class BaseModel:
     """A base class for all hbnb models"""
-    if storage_type == "db"
+    if storage_type == "db":
         id = Column(String(60), primary_key=True, nullable=False, unique=True)
         created_at = Column(DateTime(), default=datetime.utcnow())
         updated_at = Column(DateTime(), default=datetime.utcnow())
