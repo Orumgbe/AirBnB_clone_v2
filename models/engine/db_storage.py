@@ -50,7 +50,7 @@ class DBStorage:
                     key = c_name + '.' + str(obj.id)
                     all_obj.update({key: obj})
         else:
-            for obj in self.__session.query(cls).all():
+            for obj in self.__session.query(self.cls_dict[cls]).all():
                 key = cls + '.' + str(obj.id)
                 all_obj.update({key: obj})
         return all_obj
