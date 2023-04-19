@@ -22,7 +22,7 @@ class FileStorage:
             return FileStorage.__objects
         ins_dict = {}
         for key, value in FileStorage.__objects.items():
-            if cls == value.__class__:
+            if cls == value.__class__ or cls == key.split('.')[0]:
                 ins_dict[key] = value
         return ins_dict
 
