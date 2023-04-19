@@ -127,14 +127,15 @@ class HBNBCommand(cmd.Cmd):
         new_instance = HBNBCommand.classes[cls]()
 
         for param in params:
-            kv_list = param.split('=')
-            if type(kv_list[1]) in [str, int, float]:
-                key = kv_list[0]
-                value = kv_list[1]
-                if type(value) == str:
-                    value = " ".join(value.split("_")).strip("\"'")
+            if '=' in param:
+                kv_list = param.split('=')
+                if type(kv_list[1]) in [str, int, float]:
+                    key = kv_list[0]
+                    value = kv_list[1]
+                    if type(value) == str:
+                        value = " ".join(value.split("_")).strip("\"'")
+                        setattr(new_instance, key, value)
                     setattr(new_instance, key, value)
-                setattr(new_instance, key, value)
         print(new_instance.id)
         new_instance.save()
 
