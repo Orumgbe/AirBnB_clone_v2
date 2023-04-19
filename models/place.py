@@ -3,14 +3,23 @@
 import models
 from models.base_model import BaseModel, Base
 from models import storage_type
-from os import getenv
+import os
 from sqlalchemy import Column, Integer, Float, String, ForeignKey
 
 
-class Place(BaseModel):
-    """ A place to stay """
-    __tablename__ = 'places'
-    if storage_type == 'db':
+if os.getenv("HBNB_TYPE_STORAGE") == "db":
+    metadata = Base.metadata
+    place_amenity = Table('place_amenity', metadata,
+                          Column('place_id', String(60),
+                                 ForeignKey('places.id'),
+                                 primary_key=True, nullable=False),
+                          Column('amenity_id', String(60),
+                                 ForeignKey('amenities.id'), primary_key=True,
+                                 nullable=False))
+
+    class Place(BaseModel):
+        """ A place to stay """
+        __tablename__ = 'places'
         city_id = Column(String(60), nullable=False, ForeignKey(cities.id))
         user_id = Column(String(60), nullable=False, ForeignKey(users.id))
         name = Column(String(128), nullable=False)
@@ -21,12 +30,19 @@ class Place(BaseModel):
         price_by_night = Column(Integer, nullable=False, default=0)
         latitude = Column(Float, nullable=False)
         longitude = Column(Float, nullable=False)
-        amenity_ids = []
-    else:
-        city_id = ""
-        user_id = ""
-        name = ""
-        description = ""
+        reviews = relationship("Review", backref="place",
+                               cascade="all, delete")
+        amenity_ids = relationship("Amenity", secondary="place_amenity",
+                                   viewonly=False)
+else:
+    from models.amenity import Amenity
+
+    class Place(BaseModel, Base):
+        __tablename__ = 'places'
+        city_id = ''
+        user_id = ''
+        name = ''
+        description = ''
         number_rooms = 0
         number_bathrooms = 0
         max_guest = 0
@@ -35,6 +51,19 @@ class Place(BaseModel):
         longitude = 0.0
         amenity_ids = []
 
-    def __init__(self, *args, **kwargs):
-        """Initializes place class"""
-        super().__init__(*args, **kwargs)
+        @property
+        def amenities(self):
+            """property getter"""
+            from models import storage
+            amenities = []
+            for amenity_id in self.amenity_ids:
+                amenity = storage.get(Amenity, amenity_id)
+                if amenity:
+                    amenities.append(amenity)
+            return amenities
+
+        @amenities.setter
+        def amenities(self, value):
+            """property setter"""
+            if isinstance(value, Amenity):
+                self.amenity_ids.append(value.id)
