@@ -123,22 +123,20 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         params = arg_list[1:]
-        if len(params) == 0:
-            cls = arg_list[0]
-            new_instance = HBNBCommand.classes[cls]()
-        else:
-            attr_dict = {}
-            for param in params:
-                kv_list = param.split('=')
-                if type(kv_list[1]) in [str, int, float]:
-                    key = kv_list[0]
-                    value = kv_list[1]
-                    if type(value) == str:
-                        value = " ".join(value.split("_")).strip("\"'")
-                    attr_dict[key] = value
-            new_instance = HBNBCommand.classes[arg_list[0]](**attr_dict)
-            print(new_instance.id)
-            storage.save()
+        cls = arg_list[0]
+        new_instance = HBNBCommand.classes[cls]()
+
+        for param in params:
+            kv_list = param.split('=')
+            if type(kv_list[1]) in [str, int, float]:
+                key = kv_list[0]
+                value = kv_list[1]
+                if type(value) == str:
+                    value = " ".join(value.split("_")).strip("\"'")
+                    setattr(new_instance, key, value)
+                setattr(new_instance, key, value)
+        print(new_instance.id)
+        new_instance.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -220,11 +218,11 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in models.storage.all(args).items():
                 if k.split('.')[0] == args:
                     print_list.append(str(v))
         else:
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in models.storage.all().items():
                 print_list.append(str(v))
 
         print(print_list)

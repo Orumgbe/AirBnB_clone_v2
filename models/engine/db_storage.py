@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 """Handles database storage using mysql"""
 
 from os import getenv
