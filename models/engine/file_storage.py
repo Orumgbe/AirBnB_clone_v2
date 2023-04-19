@@ -1,6 +1,14 @@
 #!/usr/bin/python3
 """This module defines a class to manage file storage for hbnb clone"""
+
 import json
+from models.base_model import BaseModel
+from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 
 
 class FileStorage:
@@ -14,8 +22,8 @@ class FileStorage:
             return FileStorage.__objects
         ins_dict = {}
         for key, value in FileStorage.__objects.items():
-            if key.split('.')[0] == cls:
-                ins_dict.update({key: value})
+            if cls == value.__class__ or cls == key.split('.')[0]:
+                ins_dict[key] = value
         return ins_dict
 
     def new(self, obj):
@@ -33,13 +41,6 @@ class FileStorage:
 
     def reload(self):
         """Loads storage dictionary from file"""
-        from models.base_model import BaseModel
-        from models.user import User
-        from models.place import Place
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.review import Review
 
         classes = {
                     'BaseModel': BaseModel, 'User': User, 'Place': Place,
@@ -59,6 +60,10 @@ class FileStorage:
         """delete specific object from FileStorage.__objects if obj exists"""
         if obj is None:
             return
-        for key, value in self.all(obj.__class__).items():
-            if value is obj:
-                del self.all(obj.__class__)[key]
+        key = obj.__class__.__name__ + '.' + obj.id
+        if key in self.__objects:
+            del self.__objects[key]
+
+    def close(self):
+        """reloads saved objects"""
+        self.reload()
