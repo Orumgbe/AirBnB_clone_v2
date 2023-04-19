@@ -22,7 +22,7 @@ class FileStorage:
             return FileStorage.__objects
         ins_dict = {}
         for key, value in FileStorage.__objects.items():
-            if key.split('.')[0] == cls:
+            if cls == value.__class__:
                 ins_dict[key] = value
         return ins_dict
 
@@ -62,7 +62,7 @@ class FileStorage:
             return
         key = obj.__class__.__name__ + '.' + obj.id
         if key in self.__objects:
-            del self.all(obj.__class__)[key]
+            del self.__objects[key]
 
     def close(self):
         """reloads saved objects"""
