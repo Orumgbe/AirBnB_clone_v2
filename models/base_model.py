@@ -9,7 +9,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, DateTime
 
 
-storage_type = getenv('HBNB_STORAGE_USER')
+storage_type = getenv('HBNB_STORAGE_TYPE')
 if storage_type == "db":
     Base = declarative_base()
 else:

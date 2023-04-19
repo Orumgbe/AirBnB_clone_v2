@@ -1,18 +1,24 @@
-#!/usr/bin/python3
-""" State Module for HBNB project """
+#!/usr/bin/python
+""" holds class Review"""
+import models
 from models.base_model import BaseModel, Base
+from os import getenv
 import sqlalchemy
-from sqlalchemy import Column, String
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String, ForeignKey
 
 
-class Amenity(BaseModel):
-    """
-    Amenity class
-    back_populates indicates thatthe relationship is bidirectional with the
-    amenities attribute in the place class serving as a backref
-    """
-    __tablename__ = "amenities"
-    name = Column(String(128), nullable=False)
-    place_amenity = relationship("Place", secondary="place_amenity",
-                                 back_populates="amenities")
+class Review(BaseModel, Base):
+    """Representation of Review """
+    if getenv('HBNB_STORAGE_TYPE') == 'db':
+        __tablename__ = 'reviews'
+        place_id = Column(String(60), ForeignKey('places.id'), nullable=False)
+        user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
+        text = Column(String(1024), nullable=False)
+    else:
+        place_id = ""
+        user_id = ""
+        text = ""
+
+    def __init__(self, *args, **kwargs):
+        """initializes Review"""
+        super().__init__(*args, **kwargs)

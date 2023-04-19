@@ -12,7 +12,7 @@ class State(BaseModel, Base):
     __tablename__ = 'states'
     if getenv('HBNB_STORAGE_TYPE') == "db":
         name = Column(String(128), nullable=False)
-        cities = relationship("City", back_ref="state")
+        cities = relationship("City", backref="state")
 
     def __init__(self, *args, **kwargs):
         """Initializes state class"""

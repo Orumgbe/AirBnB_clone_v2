@@ -2,7 +2,8 @@
 """Handles database storage using mysql"""
 
 from os import getenv
-from models.base_model import Base
+import models
+from models.base_model import BaseModel, Base
 from models.user import User
 from models.city import City
 from models.place import Place
@@ -73,3 +74,7 @@ class DBStorage:
         Session = sessionmaker(bind=self.__engine, expire_on_commit=False)
         session_thread = scoped_session(Session)
         self.__session = session_thread()
+
+    def close(self):
+        """close session"""
+        self.__session.remove()
