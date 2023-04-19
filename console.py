@@ -115,32 +115,30 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
-        params = args.split(' ')
-        idx = 1
-        c_name = params[0]
-        if not c_name:
+        arg_list = args.split(' ')
+        if not arg_list[0]:
             print("** class name missing **")
             return
-        elif c_name not in HBNBCommand.classes:
+        elif arg_list[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        try:
-            new_instance = HBNBCommand.classes[c_name]()
-        except Exception as err:
-            print(err)
-        while (idx < len(params)):
-            key = params[idx].partition('=')[0]
-            value = params[idx].partition('=')[2]
-            try:
-                setattr(new_instance, key, float(value))\
-                        if '.' in value else\
-                        setattr(new_instance, key, int(value))
-            except ValueError:
-                new_value = " ".join(value.split("_")).strip("\"'")
-                setattr(new_instance, key, new_value)
-            idx = idx + 1
-        print(new_instance.id)
-        new_instance.save()
+        params = arg_list[1:]
+        if len(params) == 0:
+            cls = arg_list[0]
+            new_instance = HBNBCommand.classes[cls]()
+        else:
+            attr_dict = {}
+            for param in params:
+                kv_list = param.split('=')
+                if type(kv_list[1]) in [str, int, float]:
+                    key = kv_list[0]
+                    value = kv_list[1]
+                    if type(value) == str:
+                        value = " ".join(value.split("_")).strip("\"'")
+                    attr_dict[key] = value
+            new_instance = HBNBCommand.classes[arg_list[0]](**attr_dict)
+            print(new_instance.id)
+            storage.save()
 
     def help_create(self):
         """ Help information for the create method """

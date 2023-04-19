@@ -5,9 +5,9 @@
 from os import getenv
 from models.base_model import Base
 from models.user import User
+from models.city import City
 from models.place import Place
 from models.state import State
-from models.city import City
 from models.amenity import Amenity
 from models.review import Review
 import sqlalchemy
@@ -20,7 +20,7 @@ class DBStorage:
     __engine = None
     __session = None
 
-    cls_dict = {"User": User, "Place": Place, "State": State, "City": City
+    cls_dict = {"User": User, "Place": Place, "State": State, "City": City,
                 "Review": Review, "Amenity": Amenity}
 
     def __init__(self):
@@ -30,12 +30,13 @@ class DBStorage:
         HBNB_MYSQL_HOST = getenv('HBNB_MYSQL_HOST')
         HBNB_MYSQL_DB = getenv('HBNB_MYSQL_DB')
         HBNB_ENV = getenv('HBNB_ENV')
-        engine = create_engine("mysql+mysqldb://{}:{}@{}/{}".format(
+        self.__engine = create_engine("mysql+mysqldb://{}:{}@{}/{}".format(
                                              HBNB_MYSQL_USER,
                                              HBNB_MYSQL_PWD,
                                              HBNB_MYSQL_HOST,
                                              HBNB_MYSQL_DB),
-                               pool_pre_ping=True)
+                                      pool_pre_ping=True)
+
         if HBNB_ENV == "test":
             Base.metadata.drop_all(self.__engine)
 
@@ -64,7 +65,7 @@ class DBStorage:
 
     def delete(self, obj=None):
         """Deletes only specified obj"""
-        if obj in not None:
+        if obj is not None:
             self.__session.delete(obj)
 
     def reload(self):
