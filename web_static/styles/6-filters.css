@@ -23,7 +23,16 @@
 	vertical-align: middle;
 	height: 100%;
 	float: left;
-    width: 25%;
+	width: 25%;
+
+	line-height: 20px;
+}
+.amenities {
+	display: inline;
+	vertical-align: middle;
+	height: 100%;
+	float: left;
+	width: 25%;
 
 	line-height: 20px;
 }
@@ -47,6 +56,9 @@
 }
 
 .filter_amenities:hover .popover {
+	display: inline-block;
+}
+.amenities:hover .popover {
 	display: inline-block;
 }
 
