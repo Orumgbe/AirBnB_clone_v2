@@ -4,8 +4,8 @@
 from fabric.api import env, put, run, sudo
 from os.path import exists
 
-
 env.hosts = ['100.25.188.21', '52.86.207.199']
+
 
 def do_deploy(archive_path):
     if exists(archive_path):
