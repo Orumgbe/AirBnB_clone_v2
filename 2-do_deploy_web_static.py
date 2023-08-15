@@ -8,6 +8,7 @@ env.hosts = ['100.25.188.21', '52.86.207.199']
 
 
 def do_deploy(archive_path):
+    """Deploys zipped file to server location"""
     if exists(archive_path):
         try:
             archive_file = archive_path.split("/")[-1]
