@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Fabric script that creates a zipped archive and distributes an 
+Fabric script that creates a zipped archive and distributes an
 archive to the web servers
 """
 from datetime import datetime
@@ -21,6 +21,7 @@ def do_pack():
         return file_name
     except Exception:
         return None
+
 
 def do_deploy(archive_path):
     """Deploys zipped file to server location"""
@@ -43,6 +44,7 @@ def do_deploy(archive_path):
             return False
     else:
         return False
+
 
 def deploy():
     """creates and distributes an archive to the web servers"""
